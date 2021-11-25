@@ -8,6 +8,12 @@ const IMG_POKEMON = document.getElementById("imgPokemon")
 const SUBMIT_ANSWER = document.getElementById("submitAnswer");
 const ANSWER = document.getElementById("answer");
 
+const WRONG_ANSWER = document.getElementById("wrongAnswer");
+const CORRECT_ANSWER = document.getElementById("correctAnswer")
+
+const POKEMON_NAME = document.getElementById("pokemonName");
+
+/*******************************************************/
 function getXMLHTTPRequestPokemon(url, detailsAsked) {
     POKEBALL.classList.add("animateRoll");
     let xhr;
@@ -46,7 +52,11 @@ function simplifyName(name){
         if(name[i] == 'é' || name[i] == 'è' || name[i] == 'ê' || name[i] == 'ë'){
             newName += 'e'
         } else{
-            newName += name[i];
+            if(name[i] == '♂' || name[i] == '♀'){
+                //do nothing car on ne veut pas rajouter la lettre.
+            } else{
+                newName += name[i];
+            }
         }
     }
     return newName;
@@ -60,6 +70,8 @@ class SelectNewPkm{
             nomSimplifie : "",
             img : ""
         }
+
+        this.IDtimeout = 0;
     }
 
     setNewPkmInPokeball(){
@@ -96,20 +108,33 @@ class SelectNewPkm{
     }
 
     compareAnswer(){
+        POKEMON_NAME.innerHTML = "POKEMON : " + selectNewPkm.detailsPkm.nom;
+        clearTimeout(this.IDtimeout);
+        this.IDtimeout = setTimeout(() => {
+            POKEMON_NAME.innerHTML = "POKEMON : ";
+        }, 3000);
         let reponse = ANSWER.value;
         ANSWER.value = "";
         reponse = simplifyName(reponse);
         if(reponse == this.detailsPkm.nomSimplifie){
-            IMG_POKEMON.classList.add("animateReveal");
-            IMG_POKEMON.classList.remove("brightnessPKM");
-            setTimeout(() => {
-                IMG_POKEMON.classList.remove("animateReveal");
-                IMG_POKEMON.classList.add("brightnessPKM");
-                this.selectNewPkM();
-            }, 1000);
+            this.reveal(CORRECT_ANSWER);
         } else{
-            this.selectNewPkM();
+            this.reveal(WRONG_ANSWER);
         }
+
+        ANSWER.focus();
+    }
+
+    reveal(DOMelement){
+        DOMelement.classList.remove("hideElement");
+        IMG_POKEMON.classList.add("animateReveal");
+        IMG_POKEMON.classList.remove("brightnessPKM");
+        setTimeout(() => {
+            IMG_POKEMON.classList.remove("animateReveal");
+            IMG_POKEMON.classList.add("brightnessPKM");
+            DOMelement.classList.add("hideElement");
+            this.selectNewPkM();
+        }, 1000);
     }
 }
 let selectNewPkm = new SelectNewPkm();
