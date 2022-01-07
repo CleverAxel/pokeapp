@@ -28,3 +28,7 @@ Promise.all(requests)
     function helloPokemon(pPokemons){
         console.log(pPokemons);
     }
+
+
+
+https://www.shapedivider.app/
