@@ -6,6 +6,12 @@ https://fonts.google.com/specimen/Press+Start+2P#standard-styles
 https://fonts.google.com/specimen/Dela+Gothic+One
 https://fonts.google.com/specimen/Slackey
 
+let requests = urls.map((url) => {
+        return fetch(url);
+    });
+
+
+
 Promise.all(requests)
     .then((responses) =>{
         return responses;
